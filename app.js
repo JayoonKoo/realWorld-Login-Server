@@ -2,8 +2,10 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const dotenv = require("dotenv");
+const morgan = require("morgan");
 
 const postRouter = require("./routes/post.js");
+const postsRouter = require("./routes/posts.js");
 const userRouter = require("./routes/user.js");
 const db = require("./models");
 const passportConfig = require("./passport");
@@ -20,6 +22,7 @@ passportConfig();
 
 const app = express();
 
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -34,6 +37,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/post", postRouter);
+app.use("/posts", postsRouter);
 app.use("/user", userRouter);
 
 app.listen(3065, () => {

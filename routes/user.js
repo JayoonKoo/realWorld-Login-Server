@@ -108,10 +108,14 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post("/logout", isLoggedIn, (req, res) => {
-  req.logout();
-  req.session.destroy();
-  res.send("ok");
+router.post("/logout", isLoggedIn, (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.session.destroy();
+    res.send("ok");
+  });
 });
 
 module.exports = router;
